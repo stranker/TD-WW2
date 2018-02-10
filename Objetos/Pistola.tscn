@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "Pistola.gd"
+script/source = "extends \"res://Objetos/Weapon.gd\"
+
+var bullet = preload(\"res://Objetos/Bala.tscn\")
+
+func _ready():
+	set_magazine(8)
+	set_clip(get_magazine())
+	set_reloading(2)
+	set_shooting(0.2)
+	pass
+
+func shoot():
+	if get_clip()>0:
+		var b = bullet.instance()
+		get_tree().get_root().add_child(b)
+		b.global_position = get_node(\"Pos\").global_position
+		set_clip(get_clip() - 1)
+	pass
+
+func reload():
+	pass
+"
+_sections_unfolded = [ "Resource" ]
+
+[node name="Pistola" type="Area2D" index="0"]
+
+input_pickable = true
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+audio_bus_override = false
+audio_bus_name = "Master"
+script = SubResource( 1 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Sprite" type="Sprite" parent="." index="0"]
+
+scale = Vector2( 0.6, 0.3 )
+texture = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Pos" type="Position2D" parent="." index="1"]
+
+position = Vector2( 19.7355, 0 )
+
+
