@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://Objetos/Pistola.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objetos/ControlAnalogico.tscn" type="PackedScene" id=3]
 
 [sub_resource type="GDScript" id=1]
 
@@ -31,21 +32,35 @@ func move(delta):
 	velocity.y = clamp(velocity.y,-JUMP,GRAVITY/2)
 	#MOVEMENT
 	if is_on_floor():
-		velocity.x = FLOOR_SPEED
+		velocity.x = get_node(\"GUI/ControlAnalogico\").get_force().x * FLOOR_SPEED
 	else:
-		velocity.x = AIR_SPEED
+		velocity.x = get_node(\"GUI/ControlAnalogico\").get_force().x * AIR_SPEED
 	move_and_slide(velocity,Vector2(0,-1))
 	pass
 
-func _input(event):
-	if (event.is_action(\"ui_up\") and event.is_pressed() and !event.is_echo() and is_on_floor()):
+func _on_TouchScreenButton_pressed():
+	weapon.shoot()
+	pass # replace with function body
+
+
+func _on_Jump_pressed():
+	if is_on_floor():
 		velocity.y = -JUMP
-	if (event.is_action(\"shoot\") and event.is_pressed() and !event.is_echo()):
-		weapon.shoot()
-	pass"
+	pass # replace with function body
+"
 _sections_unfolded = [ "Resource" ]
 
-[node name="Player" type="KinematicBody2D"]
+[sub_resource type="CircleShape2D" id=2]
+
+custom_solver_bias = 0.0
+radius = 60.0
+
+[sub_resource type="CircleShape2D" id=3]
+
+custom_solver_bias = 0.0
+radius = 60.0
+
+[node name="Player" type="KinematicBody2D" index="0"]
 
 input_pickable = false
 collision_layer = 1
@@ -93,5 +108,53 @@ editor_draw_drag_margin = false
 position = Vector2( 29.7482, 4.87675 )
 
 [node name="Pistola" parent="Weapon" index="0" instance=ExtResource( 2 )]
+
+[node name="GUI" type="CanvasLayer" parent="." index="4"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+
+[node name="ControlAnalogico" parent="GUI" index="0" instance=ExtResource( 3 )]
+
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 92.0
+margin_top = -81.0
+margin_right = 92.0
+margin_bottom = -81.0
+_sections_unfolded = [ "Rect" ]
+
+[node name="Shoot" type="TouchScreenButton" parent="GUI" index="1"]
+
+position = Vector2( 776.278, 480.84 )
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = SubResource( 2 )
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "shoot"
+visibility_mode = 0
+
+[node name="Jump" type="TouchScreenButton" parent="GUI" index="2"]
+
+position = Vector2( 920.983, 479.333 )
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = SubResource( 3 )
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = ""
+visibility_mode = 0
+
+[connection signal="pressed" from="GUI/Shoot" to="." method="_on_TouchScreenButton_pressed"]
+
+[connection signal="pressed" from="GUI/Jump" to="." method="_on_Jump_pressed"]
 
 

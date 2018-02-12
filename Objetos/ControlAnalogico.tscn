@@ -6,53 +6,82 @@
 [sub_resource type="GDScript" id=1]
 
 resource_name = "ControlAnalogico.gd"
-script/source = "extends Node2D
+script/source = "extends Control
 
 var pressed = false
-var posBola
+var posBola = Vector2()
 var fuerza = Vector2()
 var centroControl
 var sizeCentro
 
+var bg
+var ball
+
 func _ready():
+	centroControl = get_node(\"bg\").global_position
+	sizeCentro = get_node(\"bg\").texture.get_size()
+	bg = get_node(\"bg\")
+	ball = get_node(\"ball\")
 	pass
 
-func _process(delta):
-	pass
+func get_force():
+	return fuerza
 
 func _input(event):
 	if event is InputEventScreenDrag:
+		if isInside(event.position.x,event.position.y):
+			pressed = true
+	if event is InputEventScreenTouch:
+		ball.position = Vector2(0,0)
+		fuerza = Vector2(0,0)
+		pressed = false
+	if pressed:
 		updateBolaPosition(event.position)
 	pass
 
+func isInside(var x,var y):
+	return x < centroControl.x + sizeCentro.x/2 and x >= centroControl.x - sizeCentro.x/2 and y< centroControl.y + sizeCentro.y/2 and y > centroControl.y - sizeCentro.y/2
+
 func updateBolaPosition(event):
-	posBola = get_node(\"Bola\")
-	centroControl = get_node(\"FondoCentro\").global_position
-	sizeCentro = get_node(\"FondoCentro\").texture.get_size()
-	calcularFuerza(event)
+	calculateForce(event)
 	posBola.x = sizeCentro.x/2 * fuerza.x
 	posBola.y = sizeCentro.y/2 * -fuerza.y
-	get_node(\"Bola\").position = posBola 
+	ball.position = posBola 
 	pass
 
-func calcularFuerza(event):
+func calculateForce(event):
 	fuerza.x = (event.x - centroControl.x)/(sizeCentro.x/2)
-	fuerza.y = (event.y - centroControl.y)/(sizeCentro.y/2)
+	fuerza.y = -(event.y - centroControl.y)/(sizeCentro.y/2)
+	if fuerza.length_squared() > 1:
+		fuerza = fuerza / fuerza.length()
+	get_node(\"Label\").text = \"x:\"+str(fuerza.x)+\" y:\"+str(fuerza.y)
 	pass"
 _sections_unfolded = [ "Resource" ]
 
-[node name="ControlAnalogico" type="Node2D" index="0"]
+[node name="ControlAnalogico" type="Control"]
 
-position = Vector2( 527.274, 321.023 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 367.0
+margin_top = 236.0
+margin_right = 367.0
+margin_bottom = 236.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
 script = SubResource( 1 )
 
-[node name="FondoCentro" type="Sprite" parent="." index="0"]
+[node name="bg" type="Sprite" parent="." index="0"]
 
 self_modulate = Color( 1, 1, 1, 0.176824 )
 texture = ExtResource( 1 )
 _sections_unfolded = [ "Material", "Visibility" ]
 
-[node name="Bola" type="Sprite" parent="." index="1"]
+[node name="ball" type="Sprite" parent="." index="1"]
 
 scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
