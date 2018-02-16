@@ -32,9 +32,10 @@ func _input(event):
 		if isInside(event.position.x,event.position.y):
 			pressed = true
 	if event is InputEventScreenTouch:
-		ball.position = Vector2(0,0)
-		fuerza = Vector2(0,0)
-		pressed = false
+		if !event.is_pressed():
+			ball.position = Vector2(0,0)
+			fuerza = Vector2(0,0)
+			pressed = false
 	if pressed:
 		updateBolaPosition(event.position)
 	pass
@@ -58,7 +59,7 @@ func calculateForce(event):
 	pass"
 _sections_unfolded = [ "Resource" ]
 
-[node name="ControlAnalogico" type="Control"]
+[node name="ControlAnalogico" type="Control" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
