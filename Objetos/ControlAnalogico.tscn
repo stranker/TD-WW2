@@ -59,7 +59,7 @@ func calculateForce(event):
 	pass"
 _sections_unfolded = [ "Resource" ]
 
-[node name="ControlAnalogico" type="Control"]
+[node name="ControlAnalogico" type="Control" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
