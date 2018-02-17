@@ -60,7 +60,7 @@ radius = 60.0
 custom_solver_bias = 0.0
 radius = 60.0
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" index="0"]
 
 input_pickable = false
 collision_layer = 1
@@ -123,15 +123,29 @@ transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 92.0
-margin_top = -81.0
-margin_right = 92.0
-margin_bottom = -81.0
+margin_left = 72.0
+margin_top = -70.0
+margin_right = 72.0
+margin_bottom = -70.0
 _sections_unfolded = [ "Rect" ]
 
-[node name="Shoot" type="TouchScreenButton" parent="GUI" index="1"]
+[node name="Control" type="Control" parent="GUI" index="1"]
 
-position = Vector2( 776.278, 480.84 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -226.0
+margin_top = -160.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="Shoot" type="TouchScreenButton" parent="GUI/Control" index="0"]
+
+position = Vector2( -28.2125, 48.2366 )
 normal = ExtResource( 1 )
 pressed = null
 bitmask = null
@@ -142,9 +156,9 @@ passby_press = false
 action = "shoot"
 visibility_mode = 0
 
-[node name="Jump" type="TouchScreenButton" parent="GUI" index="2"]
+[node name="Jump" type="TouchScreenButton" parent="GUI/Control" index="1"]
 
-position = Vector2( 920.983, 479.333 )
+position = Vector2( 116.492, 46.7296 )
 normal = ExtResource( 1 )
 pressed = null
 bitmask = null
@@ -155,8 +169,8 @@ passby_press = false
 action = ""
 visibility_mode = 0
 
-[connection signal="pressed" from="GUI/Shoot" to="." method="_on_TouchScreenButton_pressed"]
+[connection signal="pressed" from="GUI/Control/Shoot" to="." method="_on_TouchScreenButton_pressed"]
 
-[connection signal="pressed" from="GUI/Jump" to="." method="_on_Jump_pressed"]
+[connection signal="pressed" from="GUI/Control/Jump" to="." method="_on_Jump_pressed"]
 
 
